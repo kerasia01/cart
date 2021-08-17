@@ -45,7 +45,7 @@ class ProductList {
 }
 
 class ProductItem {
-  constructor(product, img = 'https://via.placeholder.com/150') {
+  constructor(product, img) {
     this.title = product.title;
     this.price = product.price;
     this.id = product.id;
@@ -65,4 +65,53 @@ class ProductItem {
   }
 }
 
-const list = new ProductList();
+class galleryProductList extends ProductList {
+
+  constructor () {
+
+    super ();
+
+
+  }
+
+  
+}
+
+
+
+class galleryProductItem extends ProductItem {
+
+
+  constructor (img = 'https://via.placeholder.com/150') {
+  super ();
+  this.img = img;
+    
+
+
+  }
+}
+
+
+class cartProductList extends ProductList {
+
+  constructor () {
+
+    super ();
+
+
+  }
+}
+
+
+class cartProductItem extends ProductItem {
+
+
+  constructor () {
+
+    super ();
+
+
+  }
+}
+
+const list = new galleryProductList();
