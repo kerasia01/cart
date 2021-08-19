@@ -19,29 +19,35 @@ let getRequest = function () {
 };
 
 class ProductList {
-  constructor(container = '.products') {
+  constructor(container) {
     this.container = container;
     this.goods = [];
     this.allProducts = [];
-    this._fetchProducts();
+
 
   }
-  _fetchProducts() {
-    getRequest().then(data => {
-      this.goods = JSON.parse(data);
-      this._render();
-    });
+  _getProductId(target) {
+
+    return target.dataset.id;
+
   }
 
-  _render() {
-    const block = document.querySelector(this.container);
+  _getProductItem(id) {
 
-    for (let product of this.goods) {
-      const productObject = new ProductItem(product);
-      this.allProducts.push(productObject);
-      block.insertAdjacentHTML('beforeend', productObject.render())
+
+    let productItem;
+    let allproducts = this.allProducts;
+    for (let product of allproducts) {
+      if (product.id == id) {
+        productItem = Object.assign({}, product);
+      }
+
     }
+    return productItem;
   }
+
+
+
 }
 
 class ProductItem {
@@ -67,25 +73,59 @@ class ProductItem {
 
 class galleryProductList extends ProductList {
 
-  constructor () {
+  constructor(container = '.products') {
 
-    super ();
-
+    super(container);
+    this._fetchProducts();
 
   }
 
-  
+  _fetchProducts() {
+    getRequest().then(data => {
+      this.goods = JSON.parse(data);
+      this._render();
+
+    });
+  }
+
+  _render() {
+    const block = document.querySelector(this.container);
+
+    for (let product of this.goods) {
+      const productObject = new galleryProductItem(product);
+      this.allProducts.push(productObject);
+      block.insertAdjacentHTML('beforeend', productObject.render());
+
+    }
+
+    block.addEventListener("click", (Event) => {
+
+      const target = Event.target;
+      if (target.className != "cart-img") {
+        return;
+      }
+      const id = this._getProductId(target);
+      console.log(id);
+      const x = this.allProducts;
+      console.log(x);
+      const product = this._getProductItem(id);
+      console.log(product);
+
+    });
+
+  }
+
+
+
 }
-
-
 
 class galleryProductItem extends ProductItem {
 
 
-  constructor (img = 'https://via.placeholder.com/150') {
-  super ();
-  this.img = img;
-    
+  constructor(product, img = 'https://via.placeholder.com/150') {
+    super(product, img);
+
+
 
 
   }
@@ -94,11 +134,20 @@ class galleryProductItem extends ProductItem {
 
 class cartProductList extends ProductList {
 
-  constructor () {
+  constructor(container = '.cart') {
 
-    super ();
+    super(container);
 
+  }
 
+  _render() {
+    const block = document.querySelector(this.container);
+
+    for (let product of this.goods) {
+      const productObject = new cartProductItem(product);
+      this.allProducts.push(productObject);
+      block.insertAdjacentHTML('beforeend', productObject.render())
+    }
   }
 }
 
@@ -106,9 +155,9 @@ class cartProductList extends ProductList {
 class cartProductItem extends ProductItem {
 
 
-  constructor () {
+  constructor(product, img = 'https://via.placeholder.com/50') {
 
-    super ();
+    super(product, img);
 
 
   }
