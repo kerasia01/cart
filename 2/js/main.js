@@ -1,10 +1,11 @@
 const API = 'goods.json';
+const CART = 'cart.json';
 
-let getRequest = function () {
+let getRequest = function (url) {
 
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', API, true);
+    xhr.open('GET', url, true);
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         if (xhr.status !== 200) {
@@ -58,17 +59,7 @@ class ProductItem {
     this.img = img;
   }
 
-  render() {
-    return `<div class="product-item" data-id="${this.id}">
-    <img src="${this.img}" alt="Some img">
-    
-        <h3>${this.title}</h3>
-        <p>${this.price} \u20bd</p>
-        <button class="buy-btn">Купить</button>
-        <button class = "cart-img"  data-id="${this.id}" ></button>
-        <div class="desc"></div >
-    <div/`;
-  }
+
 }
 
 class galleryProductList extends ProductList {
@@ -81,7 +72,7 @@ class galleryProductList extends ProductList {
   }
 
   _fetchProducts() {
-    getRequest().then(data => {
+    getRequest(API).then(data => {
       this.goods = JSON.parse(data);
       this._render();
 
@@ -105,17 +96,32 @@ class galleryProductList extends ProductList {
         return;
       }
       const id = this._getProductId(target);
-      console.log(id);
-      const x = this.allProducts;
-      console.log(x);
       const product = this._getProductItem(id);
-      console.log(product);
+      this.addToCart(product);
+
 
     });
 
   }
 
+  addToCart(product) {
+    const cartList = new cartProductList();
+    cartList._render(product);
+    cartList._setCartList(product);
+    document.querySelector(".cart").addEventListener('click', (e) => {
 
+      const target = e.target;
+      if (target.className != "remove-item") {
+        return;
+      }
+      const id = cartList._getProductId(target);
+      cartList._removeCartItem(id);
+      cartList._removeFromList(id);
+      cartList._renderAllProducts();
+      console.log(cartList.allProducts);
+
+    });
+  }
 
 }
 
@@ -126,8 +132,18 @@ class galleryProductItem extends ProductItem {
     super(product, img);
 
 
+  }
 
-
+  render() {
+    return `<div class="product-item" data-id="${this.id}">
+    <img src="${this.img}" alt="Some img">
+    
+        <h3>${this.title}</h3>
+        <p>${this.price} \u20bd</p>
+        <button class="buy-btn">Купить</button>
+        <button class = "cart-img"  data-id="${this.id}" ></button>
+        <div class="desc"></div >
+    <div/`;
   }
 }
 
@@ -137,18 +153,86 @@ class cartProductList extends ProductList {
   constructor(container = '.cart') {
 
     super(container);
+    // this._setCartList ();
+    this._fetchProducts();
 
   }
 
-  _render() {
+  _fetchProducts() { //получить  список товаров корзины с сервера
+
+
+    getRequest(CART).then(data => {
+      this.goods = JSON.parse(data);
+
+
+    });
+
+
+  }
+
+
+  _render(product) {
+
     const block = document.querySelector(this.container);
 
-    for (let product of this.goods) {
-      const productObject = new cartProductItem(product);
-      this.allProducts.push(productObject);
-      block.insertAdjacentHTML('beforeend', productObject.render())
-    }
+
+    const productObject = new cartProductItem(product);
+
+    block.insertAdjacentHTML('beforeend', productObject.render());
+
+
+
+
   }
+
+  _renderAllProducts() {
+
+    const cartItems = document.querySelectorAll(".cart-item");
+    for(let good of cartItems) {
+      document.querySelector(".cart").removeChild(good);
+    }
+    
+    for (let product of this.allProducts) {
+      this._render(product);
+    }
+
+  }
+
+  _setCartList(product) {
+    this.allProducts.push(product);
+  }
+
+  _getCartList() { // получить список товаров 
+    return this.allProducts;
+
+  }
+
+  _removeCartItem(idt) {
+
+    const cartItems = document.querySelectorAll(".cart-item");
+    for (let cartItem of cartItems) {
+      if (cartItem.dataset.id == idt) {
+        document.querySelector(".cart").removeChild(cartItem);
+        
+      }
+      
+    }
+    
+
+  }
+
+
+
+  _removeFromList(idt) {
+
+    this.allProducts = this.allProducts.filter(el => el[`id`] !== idt );
+    
+  
+  
+  }
+
+
+
 }
 
 
@@ -161,6 +245,17 @@ class cartProductItem extends ProductItem {
 
 
   }
+
+  render() {
+
+    return `<div class="cart-item" data-id="${this.id}" >
+  <img src="${this.img}" alt=""><p>${this.title}</p>
+  <p><span>${this.price}</span></p>
+  <input type="button" data-id="${this.id}" class="remove-item" value="Убрать из корзины">
+  </div>`;
+
+  }
+
 }
 
 const list = new galleryProductList();
