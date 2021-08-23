@@ -1,0 +1,134 @@
+header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #3382e9;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.logo {
+  margin: 30px;
+  margin-left: 60px;
+}
+
+button {
+  padding: 5px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 24px;
+  height: 40px;
+  width: 120px;
+  cursor: pointer;
+  margin: 10px;
+  background-color: #da6c12;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  letter-spacing: 1px;
+}
+
+.products {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 20px auto;
+}
+
+.product-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.nav-menu {
+  color: #fff;
+  font-size: 45px;
+  font-family: serif;
+  letter-spacing: 1px;
+}
+
+.sum {
+  margin: 50px auto;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  width: 30%;
+  height: 60px;
+  line-height: 60px;
+  background-color: #c3daf3;
+  border-radius: 5px;
+}
+
+span {
+  color: #da6c12;
+}
+
+.cart {
+  width: 20%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+  padding: 20px;
+  color: fff;
+}
+
+.cart-img {
+  margin-top: 30px;
+  cursor: pointer;
+  background: url("cart1.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 50px;
+}
+
+.cart-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+/*# sourceMappingURL=1.css.map */
