@@ -107,9 +107,22 @@ class galleryProductList extends ProductList {
 
   addToCart(product) {
     const cartList = this.cart;
+    if(this.cart._isInCart(product)){
+      for(let good of this.cart.allProducts){
+        if(good.id == product.id){
+          good.sum += product.price;
+          good.quantity +=1;
+        }
+      }
+      
+    } else {
+      cartList._setCartList(product);
     
-    cartList._render(product);
-    cartList._setCartList(product);
+    }
+    this.cart._sum(product);
+    this.cart._renderAllProducts();
+    // cartList._render(product);
+    
     document.querySelector(".cart").addEventListener('click', (e) => {
 
       const target = e.target;
@@ -119,8 +132,9 @@ class galleryProductList extends ProductList {
       const id = cartList._getProductId(target);
       // cartList._removeCartItem(id);
       cartList._removeFromList(id);
+      
       cartList._renderAllProducts();
-      console.log(cartList.allProducts);
+      // console.log(cartList.allProducts);
 
     });
   }
@@ -156,6 +170,7 @@ class cartProductList extends ProductList {
 
     super(container);
     // this._setCartList ();
+    this.sum = 0;
     this._fetchProducts();
 
   }
@@ -178,9 +193,7 @@ class cartProductList extends ProductList {
     const block = document.querySelector(this.container);
 
 
-    const productObject = new cartProductItem(product);
-
-    block.insertAdjacentHTML('beforeend', productObject.render());
+    block.insertAdjacentHTML('beforeend', product.render());
 
 
 
@@ -192,22 +205,29 @@ class cartProductList extends ProductList {
     const cartItems = document.querySelectorAll(".cart-item");
     for(let good of cartItems) {
       document.querySelector(".cart-list").removeChild(good);
+      document.querySelector(".cart-sum").remove();
     }
     
     for (let product of this.allProducts) {
+      
       this._render(product);
     }
-
+    if(this.allProducts.length != 0 )  {
+    document.querySelector(this.container).insertAdjacentHTML('beforeend', this._sumRender());
+    }
   }
 
   _setCartList(product) {
-    this.allProducts.push(product);
+    
+    const productObject = new cartProductItem(product);
+    this.allProducts.push(productObject);
+    // this._render(productObject);
   }
 
-  _getCartList() { // получить список товаров 
-    return this.allProducts;
+  // _getCartList() { // получить список товаров 
+  //   return this.allProducts;
 
-  }
+  // }
 
   _removeCartItem(idt) {
 
@@ -226,14 +246,47 @@ class cartProductList extends ProductList {
 
 
   _removeFromList(idt ) {
-
+    this._sumRemove(idt);
     this.allProducts = this.allProducts.filter(el => el.id != idt );
     
+    console.log(this.sum);
   
   
   }
 
 
+  _isInCart (product) {
+    let yes = false;
+    for(let good of this.allProducts) {
+
+      if (good.id == product.id) {
+
+        yes = true;
+      }
+    }
+
+    return yes;
+  }
+
+_sum (product){
+
+  this.sum += product.price;
+  console.log(this.sum);
+
+}
+_sumRemove (idt){
+
+  for(let good of this.allProducts) {
+    if (good.id == idt)
+    {
+      this.sum = this.sum - good.sum;
+    }
+  }
+}
+
+_sumRender (){
+  return `<div class="cart-sum">Общая стоимость: <span>${this.sum} руб</span></div> `;
+}
 
 }
 
@@ -244,7 +297,8 @@ class cartProductItem extends ProductItem {
   constructor(product, img = 'https://via.placeholder.com/50') {
 
     super(product, img);
-
+    this.sum = this.price;
+    this.quantity = 1;
 
   }
 
@@ -252,11 +306,13 @@ class cartProductItem extends ProductItem {
 
     return `<div class="cart-item" data-id="${this.id}" >
   <img src="${this.img}" alt=""><p>${this.title}</p>
-  <p><span>${this.price}</span></p>
+  <p><span>${this.sum}</span><span>${this.quantity}</span></p>
   <input type="button" data-id="${this.id}" class="remove-item" value="Убрать из корзины">
   </div>`;
 
   }
+
+
 
 }
 
