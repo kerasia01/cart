@@ -205,7 +205,10 @@ class cartProductList extends ProductList {
     const cartItems = document.querySelectorAll(".cart-item");
     for(let good of cartItems) {
       document.querySelector(".cart-list").removeChild(good);
-      document.querySelector(".cart-sum").remove();
+      
+    }
+    if (document.querySelector(".cart-sum") != null) {
+    document.querySelector(".cart-sum").remove();
     }
     
     for (let product of this.allProducts) {
@@ -285,7 +288,7 @@ _sumRemove (idt){
 }
 
 _sumRender (){
-  return `<div class="cart-sum">Общая стоимость: <span>${this.sum} руб</span></div> `;
+  return `<div class="cart-sum">Общая стоимость: <span>${this.sum} \u20bd</span></div> `;
 }
 
 }
@@ -305,9 +308,9 @@ class cartProductItem extends ProductItem {
   render() {
 
     return `<div class="cart-item" data-id="${this.id}" >
-  <img src="${this.img}" alt=""><p>${this.title}</p>
-  <p><span>${this.sum}</span><span>${this.quantity}</span></p>
-  <input type="button" data-id="${this.id}" class="remove-item" value="Убрать из корзины">
+  <p>${this.title}</p>
+  <p><span>${this.sum} \u20bd</span><span>Количество: ${this.quantity}</span></p>
+  <input type="button" data-id="${this.id}" class="remove-item" value="-">
   </div>`;
 
   }
